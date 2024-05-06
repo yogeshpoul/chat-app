@@ -1,0 +1,44 @@
+/* videochat.css */
+
+.video-chat-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .video-chat-window {
+    width: 80%;
+    max-width: 800px;
+    height: 70vh;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .video-chat {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .video-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .video-controls button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .video-controls button:hover {
+    background-color: #0056b3;
+  }
+  
