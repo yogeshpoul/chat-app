@@ -19,7 +19,7 @@ function Chat({ username, room, sound }) {
       };
 
       try {
-        await axios.post("http://localhost:3001/send_message", messageData);
+        await axios.post("https://chat-app-swart-psi.vercel.app/send_message", messageData);
         setCurrentMessage("");
       } catch (error) {
         console.error("Error sending message:", error);
@@ -30,7 +30,7 @@ function Chat({ username, room, sound }) {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/messages");
+        const response = await axios.get("https://chat-app-swart-psi.vercel.app/messages");
         setMessageList(response.data.messages);
       } catch (error) {
         console.error("Error fetching messages:", error);
