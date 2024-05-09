@@ -1,45 +1,49 @@
-const { Server } = require("socket.io");
-const { createServer } = require("http");
-
-// Create an Express app
 const express = require("express");
 const app = express();
+const http = require("http");
 const cors = require("cors");
+const { Server } = require("socket.io");
+const bodyParser = require("body-parser"); // Add this line for parsing POST requests
+
 app.use(cors());
+app.use(bodyParser.json()); // Add this line to parse JSON bodies
 
-// Create a HTTP server
-const server = createServer(app);
-
-// Initialize Socket.IO
+const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: "*",
-  },
+  cors: {},
 });
 
-// Socket.IO connection event
+let messageList = []; // Maintain a list of messages
+
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
 
-  // Event listener for joining a room
   socket.on("join_room", (data) => {
     socket.join(data);
     console.log(`User with ID: ${socket.id} joined room: ${data}`);
   });
 
-  // Event listener for sending a message
-  socket.on("send_message", (data) => {
-    socket.to(data.room).emit("receive_message", data);
-  });
-
-  // Event listener for disconnection
   socket.on("disconnect", () => {
     console.log("User Disconnected", socket.id);
   });
 });
 
-// Export the server for Vercel deployment
-module.exports = (req, res) => {
-  // Handle incoming HTTP requests
-  app(req, res);
-};
+// New endpoint to send a message
+app.post("/send_message", (req, res) => {
+  const { room, author, message, time } = req.body;
+  const messageData = { room, author, message, time };
+  
+  io.to(room).emit("receive_message", messageData); // Emit message to room
+  messageList.push(messageData); // Add message to messageList
+  
+  res.status(200).json({ success: true, message: "Message sent successfully" });
+});
+
+// New endpoint to get all messages
+app.get("/messages", (req, res) => {
+  res.status(200).json({ success: true, messages: messageList });
+});
+
+server.listen(3001, () => {
+  console.log("SERVER RUNNING");
+});
